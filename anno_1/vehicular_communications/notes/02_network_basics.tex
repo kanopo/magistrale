@@ -1,5 +1,79 @@
+% TODO: ARRIVATO A PAGINA 12
+%TODO: skippato da pagine 61, DA FARE
+% WARN: PARTO DA PAGINE 69
+
 \chapter{Telecomunicacion network basics}
 \section{The OSI and Internet models}
+
+L'architettura \textbf{Open System Interconnetion(OSI)} punta a collegare sistemi
+eterogenei fra di loro, la sua specifica è la \textbf{ISO 7498} ed è un modello
+costituito di 7 \textit{strati}.
+
+\begin{figure}[!ht]
+	\centering
+	% TODO: ingrandire immagine a 0.4
+	\includegraphics[width=0.4\columnwidth]{./images/osi.png}
+	\caption{Architettura OSI}
+	\label{fig:osi}
+\end{figure}
+
+\subsection{Application Layer}
+Livello del modello OSI dove le applicazioni accedono ai servizi di rete, permette ad esempio
+di trasferire un file, connettersi a database, uso di mail, ecc.
+
+\subsection{Presentation Layer}
+Livello del modello OSI adibito alla trasmissione di dati, traduce differenti formati di dati 
+presenti nell'Application Layer in uno standard per gli strati inferiori.
+
+Fornisce servizi per la trasmissione sicura ed efficiente dei dati come:
+\begin{itemize}
+  \item data encryption
+  \item data compression
+  \item altre
+\end{itemize}
+
+\subsection{Session Layer}
+
+Livello del modello OSI che permette due computer diversi di \textbf{creare}, \textbf{usare}
+e \textbf{finire} una sessione, utile per trasmissione di dati e accesso in remoto.
+
+Introduce:
+\begin{itemize}
+  \item \textbf{Controllo di dialogo}: per regolare la trasmissione e la durata delle stesse
+  \item \textbf{Gestione dei token e sincronizzazione}
+\end{itemize}
+
+\subsection{Transport Layer}
+Livello del modello OSI adibito alla gestione dei pacchetti da trasmettere:
+\begin{itemize}
+  \item Divide pacchetti grandi in più piccoli
+  \item Riordina i pacchetti nell'ordine correto all'arrivo
+\end{itemize}
+
+Gestisce inoltre il riconoscimento degli errori e il loro recupero:
+\begin{itemize}
+  \item Ricezzione di pacchetti di confermo dell'arrivo (ACK)
+  \item Reinvia pacchetti persi
+\end{itemize}
+
+
+\subsection{Network Layer}
+Livello del modello OSI adibito alla gestione dell'instradamento dei dati attraverso le sottoreti:
+% TODO: ARRIVATO A PAGINA 12
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Communication models}
 \section{Delimitation}
 \section{Sequence control}
@@ -12,16 +86,12 @@ Il controllo dell'errore ha 3 possibili soluzioni:
 	\item \textbf{Error recovery}: recupero dell'errore
 \end{itemize}
 
-%TODO: skippato da pagine 61, DA FARE
-% WARN: PARTO DA PAGINE 69
-%WARN: finire da pagina 79
-
 \subsection{Complement sum}
 
 \begin{figure}[!ht]
 	\centering
 	% TODO: ingrandire immagine a 0.4
-	\includegraphics[width=0.3\columnwidth]{./images/complement_sum.png}
+	\includegraphics[width=0.4\columnwidth]{./images/complement_sum.png}
 	\caption{Complement sum}
 	\label{fig:complement_sum}
 \end{figure}
@@ -48,7 +118,7 @@ di corretta ricezione, che torna molto utile nel caso di comunicazione unidirezi
 \begin{figure}[!ht]
 	\centering
 	% TODO: ingrandire immagine a 0.4
-	\includegraphics[width=0.3\columnwidth]{./images/repetition_code.png}
+	\includegraphics[width=0.4\columnwidth]{./images/repetition_code.png}
 	\caption{Repetition code}
 	\label{fig_repetition_code}
 \end{figure}
@@ -95,7 +165,7 @@ Si può parlare anche di ACK comulativi mediante l'uso di SQN consecutivi.
 \begin{figure}[!ht]
 	\centering
 	% TODO: ingrandire immagine a 0.4
-	\includegraphics[width=0.3\columnwidth]{./images/esempio_comunicazione_stop_wait_no_sqn.png}
+	\includegraphics[width=0.4\columnwidth]{./images/esempio_comunicazione_stop_wait_no_sqn.png}
 	\caption{Esempio comunicazione stop and wait senza SQN}
 	\label{fig:esempio_comunicazione_stop_wait_no_sqn}
 \end{figure}
@@ -104,7 +174,7 @@ Si può parlare anche di ACK comulativi mediante l'uso di SQN consecutivi.
 \begin{figure}[!ht]
 	\centering
 	% TODO: ingrandire immagine a 0.4
-	\includegraphics[width=0.3\columnwidth]{./images/esempio_comunicazione_stop_wait_sqn.png}
+	\includegraphics[width=0.4\columnwidth]{./images/esempio_comunicazione_stop_wait_sqn.png}
 	\caption{Esempio comunicazione stop and wait con SQN}
 	\label{fig:esempio_comunicazione_stop_wait_sqn}
 \end{figure}
@@ -128,10 +198,10 @@ Il tempo totale per inviare un'unità informativa(caso ideale):
 Il massimo grado di utilizzo di un canale di comunicazione nel caso di \textbf{assenza di errore}:
 \begin{align}
 	\rho_0
-	 & =\frac{T_U}{T_{tot}}                                         \\
-	 & = \frac{T_U}{T_U + 2T_P + T_A}                               \\
+	 & =\frac{T_U}{T_{tot}}                                                     \\
+	 & = \frac{T_U}{T_U + 2T_P + T_A}                                           \\
 	 & = \begin{cases}
-     \frac{1}{2 + 2 \frac{T_P}{T_U}} \quad \text{se}\quad T_U = T_A  \\
+		     \frac{1}{2 + 2 \frac{T_P}{T_U}} \quad \text{se}\quad T_U = T_A  \\
 		     \frac{1}{2 \frac{T_P}{T_U} + 1} \quad \text{se}\quad T_U >> T_A \\
 		     0 \quad \text{se}\quad T_P >> T_U
 	     \end{cases}
@@ -141,11 +211,30 @@ Il massimo grado di utilizzo di un canale di comunicazione nel caso di \textbf{a
 
 Nel caso di \textbf{presenza di errore}, non viene ricevuto l'ACK dal trasmettitore, devo fare alcune assunzioni:
 \begin{itemize}
-  \item Indipendenza statisticamente dei pacchetti informativi
-  \item perdita di pacchetti ACK
+	\item Indipendenza statisticamente dei pacchetti informativi
+	\item perdita di pacchetti ACK
 \end{itemize}
 
 Indico con $p$ la probabilità di perdita del pacchetto.
-%WARN: finire da pagina 79
 
 
+Il tempo per l'arrivo di un pacchetto con presenza di errori diventa:
+\begin{align}
+	\Bar{T_1} = & (N_t - 1) T_0 + T_1     \\
+	=           & \frac{p}{1-p} T_0 + T_1 \\
+	\simeq      & \frac{T_1}{1-p}
+\end{align}
+
+Dove $N_t$ è desscritta come:
+\begin{align}
+	N_t = \sum_{k=1}^{\infty} k p^{k-1} (1-p) = \frac{1}{1-p}
+\end{align}
+
+Quindi l'utilizzazione del canele diventa:
+\begin{align}
+	\rho = (1 - p) \rho_0
+\end{align}
+
+
+\subsubsection{Sliding window}
+PAGINA 80
