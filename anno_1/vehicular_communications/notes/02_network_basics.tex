@@ -237,4 +237,38 @@ Quindi l'utilizzazione del canele diventa:
 
 
 \subsubsection{Sliding window}
-PAGINA 80
+La ricezione con \textbf{sliding window} può essere non sequenziale ma non può superare il \textbf{timeout} che invalida il pacchetto.
+
+Esistono due strategie per il reinvio dei dati persi con la tecnica dello sliding window:
+\begin{itemize}
+  \item \textbf{go-back-N}: torna indietro di un numero $N$ di unità informative
+  \item \textbf{selective repeat}: reinvia solo i pacchetti effetivamnete persi
+\end{itemize}
+
+\begin{figure}[!ht]
+	\centering
+	% TODO: ingrandire immagine a 0.4
+	\includegraphics[width=0.4\columnwidth]{./images/sliding_window_base.png}
+  \caption{Sliding window base}
+  \label{fig:sliding_window_base}
+\end{figure}
+
+
+\begin{figure}[!ht]
+	\centering
+	% TODO: ingrandire immagine a 0.4
+	\includegraphics[width=0.4\columnwidth]{./images/sliding_window_go_back_n.png}
+  \caption{Sliding window go back N}
+  \label{fig:sliding_window_go_back_n}
+\end{figure}
+
+\begin{figure}[!ht]
+	\centering
+	% TODO: ingrandire immagine a 0.4
+	\includegraphics[width=0.4\columnwidth]{./images/sliding_window_selective_repeat.png}
+  \caption{Sliding window selective repeat}
+  \label{fig:sliding_window_selective_repeat}
+\end{figure}
+
+
+
