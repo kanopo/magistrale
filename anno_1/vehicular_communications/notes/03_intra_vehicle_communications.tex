@@ -1,3 +1,8 @@
+% TODO: ARRIVATO A PAGINA 20
+% PARTITO DA PAG 28
+
+
+
 \chapter{Intra-vehicle Communications}
 % Bus systems: basics
 %   Protocols
@@ -149,5 +154,130 @@ Altre soluzioni sono RTK(Real Time Kinematic)!!
 
 
 
+\section{Bit coding}
 
-ARRIVATO A PAGINA 20
+Esistono due tipologie di encoding dell'informazione:
+\begin{itemize}
+  \item Non Return to Zero (NRZ)
+  \item Manchester
+\end{itemize}
+
+Nella tipologia \textbf{NRZ} il valore logico $0$ è caratterizzato da un segnale basso, mentre il segnale logico $1$ è identificato da un segnale alto.
+
+Nell'encoding di tipo \textbf{Manchester} si pone attenzione al cambio di livello per attribuire il valore logico, il valore logico $0$ è identificato dal passaggio da basso livello ad alto livello e il valore logico $1$ è identificato dal passaggio di stato da alto livello a basso livello.
+
+
+
+\subsection{Reducing ElectroMagnetic Interference(EMI)}
+
+\begin{itemize}
+  \item Aggiungere schermatura ai fili
+  \item usare fili twistati per coppie di fili(annullano effetti di elettromagnetismo a vicenda)
+  \item Ridurre la ripidità del segnale
+  \item usare usare NRZ che ha pochi cambi di stato
+\end{itemize}
+
+\subsection{Clock drift}
+
+Il clock drift è causato dalla costruzione fisica del quarzo usato per il clock, che diffferensce leggermente da altri clock, questo fenomeno causa \textbf{desincronizzazione}.
+\subsection{Bit stuffing}
+Il problema associato all'utilizzo della codifica NRZ è che inviando una serie di bit costanti, in presenza di piccoli ritardi, i dati vengono ricevuti in maniera sbagliata.
+
+Una soluzione proposta è quella del \textbf{Bit Stuffing} ed inserisce un bit extra dopo $n$ bit consecutivi.
+\begin{itemize}
+  \item Se ci sono 3 uni di fila, agiunge uno zero
+  \item se ci sono 3 zeri di fila, aggiunge un uno
+\end{itemize}
+
+
+\section{Classification according to bus access}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\textwidth]{./images/classification_bus_access.png}
+  \caption{Classification according to bus access}
+  \label{fig:classification_bus_access}
+\end{figure}
+
+\subsection{Deterministic}
+\subsubsection{Centralized}
+Accesso al bas di tipo \textbf{master-slave}(similare ad un sistema pooling)
+\subsubsection{Decentralized}
+
+Protocolli basati su \textbf{token}, tutti collegati a cerchio e si invia il messaggio con un token (che è tipo il bastone della parola) al ricevitore, il ricevitore manda il suo messaggio dopo nella catena insieme altoken e cosi via.
+
+Solo il nodo con il token poò inviare il suo pacchetto di informazioni.
+
+
+L'altro approccio è il \textbf{TDMA}(Time-division multiple access), si identificano i client attaccati al mezzo di comunicazione e si divide la comunicazioni a slot temporali e si può capire chi invia guardando il riferimento al clock
+
+Grande problema di TDMA è la sincronizzazione.
+
+
+\subsection{Random}
+\subsubsection{Non Collision Free}
+\textbf{CSMA/CA(Carrier Sense Multiple Access)/(Collision Avoidance)} misura l'energia del bus e invia quando l'energia è sotto un certo \textit{livello di riferimento}.
+
+CSMA senza CA, se sente il canale occupato, seleziona un tempo random che chiama backoff e aspetta, dopo di che riprova ad ascolare il bus.
+
+CSMA con CA ogni nodo conta il tempo che il noda che sta comunicando finisca, i nodi posso comunicare in qualsiasi momento e quindi ogni conteggio sarà diverso, dopo che il nodo ha finito di comunicare, ogni nodo aspetta il tempo che ha contato il precedenza.
+
+se mentre i nodi stanno aspettando il tempo contato per trasmettere uno dei nodi finisce, si salva il tempo avanzato agli altri nodi e si utilizza quello per il prossimo check di chi tocca.
+
+Questo sistema non è \textit{giusto} e può portare pacchetti a rimanere nella coda per tempi lunghi.
+
+
+
+% TODO: descrivere meglio CSMA/CA
+
+\textbf{CSMA/CD(Carrier Sense Multiple Access)/(Collision Detection)} se più nodi comunicano l'energia sul bus è maggiore del solito e i nodi si rendono conto del problema.
+
+I nodi si fermano(per risparmiare risorse) e mandano un segnale \textbf{jamming} che è una sequenza di bit di alto livello per comunicare agli altri nodi il problema e di non comuniicare per un po.
+
+Si applicano ai nodi dei tempi di backoff mediante strategie di backoff e si riprova.
+
+\textbf{CSMA/CR(Carrier Sense Multiple Access)/(Collision Resolution)}:
+\begin{enumerate}
+  \item \textbf{Arbitration phase}: si compete per avere il canale
+  \item \textbf{data}: il nodo che ha vinto il canale comunica
+\end{enumerate}
+
+E si itera questo processo ogni volta che un nodo vuole comunicare.
+
+
+\subsection{Typical structure of an ECU}
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\textwidth]{./images/ecu.png}
+  \caption{Struttura ECU}
+  \label{fir:struttura_ecu}
+\end{figure}
+
+
+
+
+
+\section{Protocols}
+
+
+\subsection{K-Like Bus}
+
+Si concentra su \textbf{Layer fisico} e \textbf{Layer data link} ed è un bus bidirezionale con comunicazione su di un filo.
+
+
+Principalmente usato per connettere:
+\begin{itemize}
+  \item ECU to Tester
+  \item ECU to ECU
+\end{itemize}
+
+Lo \textbf{zero logico} ha un valore di energia inferiore al $20\%$ del massimo del bus, mentre il \textbf{uno logico} è rappresentato quando il segnale supera l'$80\%$ del valore massimo.
+
+Questo protocollo è compatibile con \textbf{UART}(Universal Asynchronous Receiver Transmitter).
+
+
+
+
+% TODO: GUARDARE DA PAGINA 46 A PAGINA 49 per scarsa attenzione
+
+
