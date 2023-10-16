@@ -173,7 +173,7 @@ La regione ammissibile Sa di un problema di PL è un poliedro e come tale è un 
 
 Si definisce vertice di $S_a$ un punto $\bar{x} \in S_a$ tale che $\nexists x_1, x_2 \in S_a, x \neq x_2$ tali che:
 \begin{align}
-  \bar{x} = 0.5 x_1 + 0.5 x_2
+	\bar{x} = 0.5 x_1 + 0.5 x_2
 \end{align}
 
 Ovvero $\bar{x}$ è il punto medio del segmento che unisce $x_1$ e $x_2$.
@@ -184,5 +184,80 @@ Ne derica che se un problema di programmazione in forma canonica ha $S_a\neq \em
 
 
 \section{Raggi}
+Nel caso $S_a$ sia un poliedro illimitato, si definisce \textbf{raggio} di $S_a$ un vettore $r$ tale che:
 
-ARRIVATO A PAGINA 29
+\begin{align}
+	\forall x_0 \in S_a, \quad \forall \lambda \geq 0, \quad x_0 + \lambda r \in S_a
+\end{align}
+
+La semiretta con origine in $x_0$ e direzione $r$ è completamente contenuta in $S_a$ per qualunque valore di $x_0 \in S_a$.
+
+
+
+\section{Raggi estremi}
+Un raggio $r$ di $S_a$ è detto \textbf{estremo} se non esistono altri due raggi $r_1$ e $r_2$ con direzioni distinte tali che:
+\begin{align}
+	r_1 \neq \mu r_2 \forall \mu \in \mathbb{R}
+\end{align}
+
+tali che:
+\begin{align}
+	r = \frac{1}{2} (r_1 + r_2)
+\end{align}
+
+$S_a$ ha sempre un numero finto di raggi estremi.
+
+
+
+\section{Teorema di $S_a$}
+
+Sia dato un problema di Programmazione lineare in forma canonica con $S_a \neq \emptyset$.
+Siano $v_1, \dots, v_k$ i vertici di $S_a$ e nel caso in cui $S_a$ sia un poliedro illimitato, siano $r_1, \dots, r_h$ i raggi estremi di $S_a$.
+
+Allora $x \in S_a$ se e solo se:
+\begin{align}
+	\exists \lambda_1, \dots, \lambda_k \geq 0, \quad \sum_{i=1}^k \lambda_i = 1, \quad \exists \mu_1, \dots, \mu_h \geq 0
+\end{align}
+
+tali che:
+
+\begin{align}
+	x = \sum_{i=1}^k \lambda_i v_i + \sum_{j=1}^h \mu_j r_j
+\end{align}
+
+NOTA:
+I punti in $S_a$ sono tutti e soli i punti ottenibili come somma di:
+\begin{itemize}
+	\item una combinazione convessa dei vertici di $S_a$
+	\item una combinazione lineare con coefficienti non negativi dei raggi estremi di $S_a$
+\end{itemize}
+Quindi un numero finito di oggetti (vertici e raggi estremi) mi permettono di rappresentare tutto l’insieme $S_a$.
+
+
+
+\section{Insieme delle soluzioni ottime di $S_{ott}$}
+
+\begin{align}
+	S_{ott} = \{ x^* \in S_a : cx^* \geq cx \forall x \in S_a \}
+\end{align}
+
+L'insieme delle soluzioni ottime è un sottoinsieme di $S_a$.
+
+
+\subsection{Forme di $S_{ott}$}
+
+\begin{itemize}
+	\item $S_{a} = \emptyset \implies S_{ott}$
+	\item $S_{a} \neq \emptyset$ e politopo(insieme chiuso e limitato) $\implies S_{ott} \neq \emptyset$:
+	      \begin{itemize}
+		      \item $S_{ott}$ ha un solo punto
+		      \item $S_{ott}$ ha infiniti punti
+	      \end{itemize}
+	\item $S_{a} \neq \emptyset$ e poliedro illimitato:
+	      \begin{itemize}
+		      \item $S_{ott} = \emptyset$ obiettivo illimitato(sequenza infinita di punti che aumento la funzione obiettivo all'infinito)
+		      \item $S_{ott}$ è costituito da un solo punto
+		      \item $S_{ott}$ è costituito da un'insieme infinito e limitato di punti
+		      \item $S_{ott}$ è costituito da un'insieme infinito e illimitato di punti
+	      \end{itemize}
+\end{itemize}
