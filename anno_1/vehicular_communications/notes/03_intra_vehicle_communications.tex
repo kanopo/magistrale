@@ -1,6 +1,10 @@
 % TODO: ARRIVATO A PAGINA 20
 % PARTITO DA PAG 28
 
+% TODO: GUARDARE DA PAGINA 46 A PAGINA 53 per scarsa attenzione
+
+%  TODO: arrivato a pagina 82
+% TODO: prof arrivato almeno a pagina 85
 
 
 \chapter{Intra-vehicle Communications}
@@ -278,6 +282,280 @@ Questo protocollo è compatibile con \textbf{UART}(Universal Asynchronous Receiv
 
 
 
-% TODO: GUARDARE DA PAGINA 46 A PAGINA 49 per scarsa attenzione
+% TODO: GUARDARE DA PAGINA 46 A PAGINA 53 per scarsa attenzione
 
 
+\subsection{CAN - Controller Area Network}
+
+Protocollo realizato nel 1986 da Bosh, la topologia di rete è quella del \textbf{Bus}.
+
+Il protocollo riesce a mantenere contemporaneamente fino a 110 nodi e i segnali possibili sono 2:
+\begin{itemize}
+  \item \textbf{LOW}: segnale dominante
+  \item \textbf{HIGH}: segnale recessivo
+\end{itemize}
+
+
+CAN ha una lunghezza massima del BUS di massimo $500m$ ad una velocità di $125kBit/s$.
+
+
+Successivamente nello standard \textbf{ISO 11898} si è descritto due velocità:
+\begin{itemize}
+  \item LOW speed CAN: fino a $125kBit/s$
+  \item High speed CAN: fino a $1MBit/s$
+\end{itemize}
+
+Il protocollo CAN interessa solo i layer 1 e 2 dell'ISO/OSI stack e le sue caratteristiche principali sono:
+\begin{itemize}
+  \item random access
+  \item collision free
+  \item message oriented
+  \item no indirizzi(solo broadcast o multicast)
+\end{itemize}
+
+
+\subsubsection{Layer fisico}
+Il protocollo CAN può usare due configurazioni:
+\begin{itemize}
+  \item \textbf{HIGH SPEED CAN}:
+    \begin{itemize}
+      \item fino a $500kBit/s$
+      \item 2 cavi arrotolati per ridurre interferenze da campi elettromagnetici
+      \item cavi di collegamento ai nodi massimo di $30m$ (branch)
+      \item Segnale tra $0$ e $2V$
+      \item resistore terminale di $120\Omega $
+      \item l'errore deve essere scoperto entro il tempo di 1 BIT, quindi la lunghezza è vincolata a \autoref{eq:calcolo_lunghezza_massima_filo}
+    \end{itemize}
+  \item \textbf{LOW SPEED CAN}:
+    \begin{itemize}
+      \item fino a $125kBit/s$
+      \item 2 cavi per ridurre le interferenze elettromagnetiche
+      \item nessuna restrizione sui cavi di branch che collegano i nodi al bus
+      \item segnale tra $0$ e $5V$
+    \end{itemize}
+  \item \textbf{SINGLE WIRE CAN}:
+    \begin{itemize}
+      \item velocità fino a $83kBit/s$
+      \item 1 solo cavo e massa come riferimento
+      \item segnale tra $0$ e $5V$
+    \end{itemize}
+\end{itemize}
+
+
+
+Avendo il la velocità alla quale si vuole trasmettere i dati, si possono ricavare i metri massimi del cavo, ad esempio avendo una velocità di $R = 500kBit/s$ i metri massimi del filo sono calcolabili come:
+\begin{align}
+  \frac{1}{R} \geq 2 l \cdot 10^{-8} \\
+  l \leq \frac{1}{2R \cdot 10^{-8}}
+  \label{eq:calcolo_lunghezza_massima_filo}
+\end{align}
+
+\subsubsection{CAN in Vehicular Networks}
+\textbf{Comunicazione senza indirizzo}
+\begin{itemize}
+    \item I messaggi portano un identificativo del messaggio di 11 bit (CAN 2.0A) o 29 bit (CAN 2.0B).
+    \item Le stazioni non hanno un indirizzo, e i frame non ne contengono uno.
+    \item Le stazioni utilizzano l'identificativo del messaggio per decidere se un messaggio è destinato a loro.
+    \item L'accesso al mezzo avviene utilizzando CSMA/CR con arbitrato bit per bit.
+    \item Il livello di collegamento utilizza 4 formati di frame: Dati, Richiesta (Remote), Errore, Sovraccarico (controllo di flusso).
+    \item Il formato dei dati nel protocollo CAN segue lo schema \autoref{fig:can_data_format}
+\end{itemize}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\textwidth]{./images/can_data_format.png}
+  \caption{Formato dei dati CAN}
+  \label{fig:can_data_format}
+\end{figure}
+
+\textbf{CSMA/CR con arbitrato bit per bit}
+\begin{itemize}
+    \item Evita collisioni tramite l'accesso al bus controllato dalla priorità.
+    \item Ogni messaggio contiene un identificativo corrispondente alla sua priorità.
+    \item L'identificativo codifica "0" dominante e "1" recessivo: la trasmissione simultanea di "0" e "1" produce un "0".
+    \item Riempimento dei bit: dopo 5 bit identici, viene inserito un bit di riempimento invertito (ignorato dal ricevitore).
+    \item Quando nessuna stazione sta trasmettendo, il bus legge "1" (stato recessivo).
+    \item La sincronizzazione avviene a livello di bit, rilevando il bit di inizio della stazione trasmittente.
+    \item Attendere la fine della trasmissione corrente.
+    \item Attendere 6 bit recessivi consecutivi.
+    \item Inviare l'identificativo (mentre si ascolta il bus).
+    \item Osservare una discrepanza tra il livello di segnale trasmesso e rilevato.
+    \item Questo indica che si è verificata una collisione con un messaggio di priorità superiore.
+    \item Ritirarsi dall'accesso al bus e riprovare in seguito.
+    \item Realizzazione di uno schema di priorità non pre-emptive.
+    \item Garanzie in tempo reale per i messaggi con priorità più alta, ad esempio, messaggi con il più lungo prefisso "0".
+\end{itemize}
+
+
+
+Esempio di arbitrato bit per bit(\autoref{fig:can_bitwise_example}):
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\textwidth]{./images/can_bitwise_example.png}
+  \caption{Esempio di arbitrato bit per bit}
+  \label{fig:can_bitwise_example}
+\end{figure}
+
+In questo caso il client 2 si rende conto che c'è un problema e fa \textbf{back off} lasciando libero il bus.
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\textwidth]{./images/can_bitwise_example_pt2.png}
+  \caption{Esempio di arbitrato bit per bit}
+  \label{fig:can_bitwise_example_pt2}
+\end{figure}
+
+In \autoref{fig:can_bitwise_example_pt2} il client 1 si rende conto del bus impegnato da una comunicazione con priorità maggiore e fa \textbf{backoff} che porta a mantenere sul bus la comunicazione con priorità maggiore(client 3) e poi segue la trasmissione del dato che il client 3 deve trasmettere.
+
+
+
+
+\subsubsection{TTCAN(Time triggered CAN)}
+un problema del CAN è quello della temporizzazione e del mantenimento dei clock fra i client.
+
+Per risolvere questo problema è stato creato il TTCAN, che ha un nodo dedicato che prende il nome di \textbf{time master} è che periodicamente manda un segnale \textbf{basic cycles} a tutti i nodi.
+
+Con \textbf{basic cycle} si intende un numero definito di slot occupabili che vengono popolati da una fase di organizzazione per priorità all'inizio della stessa.
+
+
+CAN non si può usare per real time communications.
+
+\subsubsection{Message Filtering}
+
+I messaggi vengono accettati in base al loro identificativo mediante l'uso di due registri:
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\textwidth]{./images/can_filte.png}
+  \caption{Registri di filtraggio CAN}
+  \label{fig:can_filter}
+\end{figure}
+
+
+\subsubsection{Data Format}
+
+Il formato di dati segue:
+\begin{itemize}
+  \item NRZ
+  \item bit stuffing
+  \item il frame inizia con un bit significativo(0)
+  \item il message idenfier è 11 Bit(CAN 2.0A) oppure adesso 29Bit (CAN 2.0B)
+  \item Bit di controllo idenficano il tipo di messaggio e la lunghezza
+  \item payload: massimo 8 Byte, trasmesso a $500kBit/s$
+  \item i dati interessanti del frame sono pochi e quindi il data rate effettivo è $30kBit/s$
+\end{itemize}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\textwidth]{./images/can_data_format_2.png}
+  \caption{Data format}
+  \label{fig:can_format_2}
+\end{figure}
+
+
+
+\subsubsection{Error detection LOW LEVEL}
+\begin{itemize}
+    \item Il mittente verifica la presenza di livelli di segnale inattesi sul bus.
+    \item Tutti i nodi monitorano i messaggi sul bus.
+    \item Tutti i nodi verificano la conformità del protocollo dei messaggi.
+    \item Tutti i nodi controllano il riempimento dei bit.
+    \item Il ricevitore verifica il CRC.
+    \item Se uno qualsiasi dei nodi rileva un errore, trasmette un segnale di errore.
+      (6 bit dominanti senza bit stuffing)
+    \item Tutti i nodi rilevano il segnale di errore e scartano il messaggio.
+\end{itemize}
+
+
+
+
+
+\subsubsection{Error detection HIGH LEVEL}
+
+
+\begin{itemize}
+    \item Il mittente verifica la ricezione di un riconoscimento.
+      (Il ricevitore trasmette un bit dominante "0" durante il campo di ACK del messaggio ricevuto)
+    \item Ripetizione automatica delle trasmissioni fallite.
+    % \item Se il controller si rende conto di causare troppi errori:
+    %     \begin{itemize}
+    %         \item Sospendere temporaneamente l'accesso al bus.
+    %     \end{itemize}
+    \item Probabilità residua di fallimento circa $10^{-11}$.
+\end{itemize}
+
+
+
+
+\subsubsection{Transoport Layer}
+Utile alla gestione del flusso, e gestioen dei frammenti di un singolo messaggio divisi in più data frames.
+
+I due protocolli sono:
+\begin{itemize}
+  \item ISO-TP
+  \item TP 2.0
+\end{itemize}
+
+\subsubsection{ISO-TP}
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\textwidth]{./images/can_iso_tp.png}
+  \caption{ISO-TP}
+  \label{fig:can_iso_tp}
+\end{figure}
+
+
+L'\textbf{HEADER} introduce un byte opzionale per l'adressing e da 1 a 3 byte \textbf{PCI}(Protocol Control Information) che identificano il tipo di messaggio e byte specifici al messaggio.
+
+
+\textbf{Single-frame} è identificato da 1 byte PCI, l'high-niggle(4bit) è 0, e il low-nibble identifica i bytes in payload, non è possibile fare controllo di flusso.
+
+\textbf{First-frame}: identificato da 2 bytes PCI, high-nibble è 1 e low-nibble con aggiunta di 1 byte definisce la dimensione del payload.
+
+Dopo il primo frame il sender aspetta il \textbf{flow control frame}.
+
+\textbf{Consecutive-frame}: 1 byte PCI, high nibble è 2, low nibble è un numero d isequenza \textbf{SN} che parte da 1
+
+\textbf{Flow control-frame}: 3 bytes pci, high nibble è 3 e low nibble specifica lo stato del flusso \textbf{FS}
+\begin{itemize}
+  \item FS 1: cear send
+  \item FS 2: wait
+\end{itemize}
+
+Il byte 2 specifica la block size BS e il byte 3 indica ST(separation time).
+
+
+
+
+\subsubsection{TP 2.0}
+Protocollo simile a TCP:
+\begin{itemize}
+  \item connection oriented
+  \item comunicazione basata su canali
+  \item specifica fasi di: setup, configurazione, trasmissione e chisura
+  \item ogni ECU ha un'indirizzo
+\end{itemize}
+
+
+
+
+\textbf{Broadcast}
+\begin{itemize}
+  \item ripetizione per 5 volte per evitare perdita
+  \item Byte 0: adress of desctination ECU
+  \item Byte 1: operation code(broadcast response or request)
+  \item Byte 2, 3, 4: Service ID(SID) 
+  \item Byte 5, 6: Response (si alterna 0x5555 e 0xAAAA per dire che non si vuole aspettare risposta)
+\end{itemize}
+
+
+
+\textbf{Channel setup}
+\begin{itemize}
+  \item Byte 0: adress destination ECU
+  \item Byte 1: Operation code(Channel request, positive response e negative response)
+  \item Byte 2, 3: RX ID(presente se validity nibble di Byte 3 è 0 altrimenti non settato)
+  \item Byte 4, 5: TX ID(presente se validity nibble di Byte 5 è 0 altrimenti non settato)
+  \item Byte 6: application type
+\end{itemize}
+
+%  TODO: arrivato a pagina 82
+% TODO: prof arrivato almeno a pagina 85
