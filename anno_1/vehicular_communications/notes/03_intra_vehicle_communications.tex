@@ -1,7 +1,3 @@
-% TODO: ARRIVATO A PAGINA 20
-% PARTITO DA PAG 28
-
-% TODO: GUARDARE DA PAGINA 46 A PAGINA 53 per scarsa attenzione
 
 %  TODO: arrivato a pagina 82
 % TODO: prof arrivato almeno a pagina 85
@@ -157,8 +153,54 @@ Altre soluzioni sono RTK(Real Time Kinematic)!!
 \end{itemize}
 
 
+\subsubsection{Wired OR}
+
+\begin{figure}[!ht]
+  \begin{adjustbox}{width=0.5\columnwidth, center}
+    \includegraphics{images/wired_or.png}
+  \end{adjustbox}
+  \caption{Wired OR}
+  \label{fig:wired_or}
+\end{figure}
+
+\subsubsection{Wired AND}
+
+\begin{figure}[!ht]
+  \begin{adjustbox}{width=0.5\columnwidth, center}
+    \includegraphics{images/wired_and.png}
+  \end{adjustbox}
+  \caption{Wired AND}
+  \label{fig:wired_and}
+\end{figure}
+
+
+\subsubsection{Wave Effect}
+Ad alte velocità entrano in gioco degli effetti non volueti a causa dell'alta velocità.
+
+\begin{align}
+  c_0 &= 3 \cdot 10^8 \frac{m}{s}
+  \label{eq:velocita_luce}
+\end{align}
+
+\begin{align}
+  c &\approx \frac{1}{3} c_0 = 10^8 \frac{m}{s}
+  \label{eq:velocita_segale_bus}
+\end{align}
+
+Il segnale nei veicoli ha un delay di circa $200ns$ quindi il problema insorge quando il tempo per bit è:
+\begin{align}
+  t_{bit} < 2000ns = 2 \mu s
+\end{align}
+
 
 \section{Bit coding}
+\begin{figure}[!ht]
+  \begin{adjustbox}{width=0.5\columnwidth, center}
+    \includegraphics{images/bit_coding.png}
+  \end{adjustbox}
+  \caption{Bit coding}
+  \label{fig:bit_coding}
+\end{figure}
 
 Esistono due tipologie di encoding dell'informazione:
 \begin{itemize}
@@ -264,25 +306,41 @@ E si itera questo processo ogni volta che un nodo vuole comunicare.
 \section{Protocols}
 
 
-\subsection{K-Like Bus}
+\subsection{Il Bus K-Line}
 
-Si concentra su \textbf{Layer fisico} e \textbf{Layer data link} ed è un bus bidirezionale con comunicazione su di un filo.
+Il Bus K-Line è un protocollo standard dell'industria degli anni '80, successivamente standardizzato come ISO 9141. Esistono numerose varianti del protocollo, soprattutto a livello di Link Layer. Tuttavia, ci concentriamo principalmente sull'ISO 14230, noto come KWP 2000 (Keyword Protocol), che specifica i dettagli dei livelli fisici e di collegamento. Questo bus è bidirezionale e consente la comunicazione su un singolo filo, noto come la "linea K".
+
+Facoltativamente, può essere presente anche una "linea L" unidirezionale, che consente reti miste. Il Bus K-Line è principalmente utilizzato per collegare unità di controllo elettroniche (ECU) a strumenti diagnostici (tester), anche se è possibile utilizzarlo per la comunicazione diretta tra ECU in casi rari. I livelli logici sono relativi alla tensione a bordo del veicolo, con valori inferiori al $20\%$ che rappresentano "0" e valori superiori all'$80\%$ che rappresentano "1". La trasmissione di bit segue uno schema compatibile con UART (Universal Asynchronous Receiver Transmitter), comprensivo di un bit di start, otto bit di dati, un bit di stop e un bit di parità opzionale. La velocità di trasmissione dei bit può variare da 1,2 kBit/s a 10,4 kBit/s, ma è determinata dall'ECU, non dal bus. Di conseguenza, il master deve essere in grado di gestire più velocità di bit.
+
+\subsection{Protocollo del Bus K-Line}
+
+Il protocollo del Bus K-Line prevede una procedura di stabilimento della connessione che esiste in due varianti: "5 Baud init" e "Fast init". Nella prima variante, il master invia l'indirizzo di destinazione utilizzando una velocità di 5 bit al secondo. L'ECU risponde con il valore 0x55 (01010101), che rappresenta il byte basso della chiave di comunicazione, e il byte alto con la velocità di dati desiderata. Il master deduce la velocità di bit dal modello e invia un bit di "Echo" corrispondente all'alto byte invertito. L'ECU risponde con un altro bit di "Echo" corrispondente all'indirizzo di destinazione invertito.
+
+La seconda variante, "Fast init", ha una procedura più rapida (100 ms) e una velocità di bit costante di 10,4 kBit/s. In questa variante, il master invia un modello di "sveglia" (25 ms basso, 25 ms di pausa) seguito da una richiesta di "Start Communication" che include l'indirizzo di destinazione. L'ECU risponde con una "chiave" entro un massimo di 50 ms, la quale codifica le varianti di protocollo supportate.
+
+La comunicazione sul Bus K-Line è sempre inizializzata dal master, che invia una richiesta a cui l'ECU risponde con una risposta. L'indirizzamento può essere a livello fisico (per identificare specifiche ECU) o a livello funzionale (per identificare classi di ECU come motore, trasmissione, ecc.). La durata di una singola trasmissione a 10,4 kBit/s varia da 250 ms nel miglior caso a 5,5 s nel caso peggiore, il che implica un tasso di dati di livello di applicazione inferiore a 1 KB/s.
+
+\subsection{Intestazione del Protocollo del Bus K-Line}
+
+L'intestazione di un messaggio K-Line comprende un "byte di formato" che codifica la presenza e il significato dei byte di indirizzo. Inoltre, la lunghezza del pacchetto può essere codificata nel byte di formato, consentendo di omettere il byte di lunghezza. L'intestazione include l'indirizzo di destinazione, l'indirizzo di origine, la lunghezza del messaggio e il payload, che può contenere fino a 255 byte. Il primo byte del payload rappresenta l'Identificatore del Servizio (SID), seguito da un byte di checksum che è la somma di tutti i byte del messaggio, calcolata in modulo 256.
+
+\subsection{Service Identifiers (SIDs) del Bus K-Line}
+
+Il Bus K-Line utilizza Service Identifiers (SIDs) per definire il tipo di servizio richiesto o fornito. Tra i SIDs standard troviamo quelli per l'inizializzazione e la terminazione della sessione, come "0x81h Start Communication Service Request" e "0x82h Stop Communication Service Request". Altri SIDs possono essere definiti dai produttori e passati invariati al livello di applicazione. Inoltre, è comune utilizzare due SIDs per ciascun tipo di messaggio: il primo SID rappresenta una risposta positiva, mentre il secondo indica una risposta negativa.
+
+\subsection{Gestione degli Errori del Bus K-Line}
+
+La gestione degli errori sul Bus K-Line prevede che, se arriva un segnale errato, l'ECU ignora il messaggio. Il master, d'altro canto, rileva la mancanza di un'accettazione e ripete il messaggio. Se dati non validi vengono inviati, il livello di applicazione può rispondere con una risposta negativa. In questo modo, sia il master che l'ECU possono reagire in modo appropriato agli errori.
+
+\subsection{Utilizzo nella Diagnostica On Board (OBD)}
+
+Il Bus K-Line è comunemente impiegato nella Diagnostica On Board (OBD). Il pin 7 del connettore OBD è dedicato al Bus K-Line. Nella diagnosi OBD, viene utilizzata una variante più rigorosa del protocollo. La velocità di bit è fissa a 10,4 kBit/s e non vi sono modifiche nei tempi. L'intestazione del messaggio non è più variabile e il byte di lunghezza non è mai incluso. L'indirizzo è sempre incluso e la lunghezza massima del messaggio è limitata a 7 byte. Il protocollo OBD deve utilizzare l'indirizzamento logico da parte del tester e l'indirizzamento fisico da parte delle ECU.
 
 
-Principalmente usato per connettere:
-\begin{itemize}
-  \item ECU to Tester
-  \item ECU to ECU
-\end{itemize}
-
-Lo \textbf{zero logico} ha un valore di energia inferiore al $20\%$ del massimo del bus, mentre il \textbf{uno logico} è rappresentato quando il segnale supera l'$80\%$ del valore massimo.
-
-Questo protocollo è compatibile con \textbf{UART}(Universal Asynchronous Receiver Transmitter).
 
 
 
 
-% TODO: GUARDARE DA PAGINA 46 A PAGINA 53 per scarsa attenzione
 
 
 \subsection{CAN - Controller Area Network}
