@@ -4,44 +4,8 @@
 
 
 \chapter{Intra-vehicle Communications}
-% Bus systems: basics
-%   Protocols
-%   K-Line
-%   CAN
-%   LIN
-%   FlexRay
-%   MOST
-%   In-car Ethernet
-% ECUs
-% Safety
 
 \section{Bus Systems}
-
-% \subsection{ISO/OSU Layers: Router}
-%
-% \begin{figure}[!ht]
-%   \centering
-%   \includegraphics[width=0.4\textwidth]{./images/osi_router.png}
-%   \caption{OSI Router}
-%   \label{fig:osi_router}
-% \end{figure}
-%
-% Da notare che se il router ha la parte di network separate, allora i due lati edllo strato network hanno protocolli diversi e il router deve fare da nterprete.
-%
-%
-% \subsection{ISO/OSI Layers: Functions in Detail}
-%
-% \begin{itemize}
-%   \item \textbf{Layer fisico}: trasmissione dei bit
-%   \item \textbf{Layer data link}: trasmissione dei frame
-%   \item \textbf{Layer network}: trasmette dei pacchetti
-%   \item \textbf{Layer transport}: trasmissione sicura dei frammenti
-%   \item \textbf{Layer session}: gestione della sessione
-%   \item \textbf{Layer presentation}: definisce sintassi e semantica dell'informazione
-%   \item \textbf{Layer application}: comunicazione fra applicazioni
-% \end{itemize}
-
-
 
 \subsection{Perchè usare i bus?}
 Un bus che collega tutti i componenti al posto di avere una topologia a grafo completo ha i seguenti vantaggi:
@@ -312,7 +276,7 @@ Il Bus K-Line è un protocollo standard dell'industria degli anni '80, successiv
 
 Facoltativamente, può essere presente anche una "linea L" unidirezionale, che consente reti miste. Il Bus K-Line è principalmente utilizzato per collegare unità di controllo elettroniche (ECU) a strumenti diagnostici (tester), anche se è possibile utilizzarlo per la comunicazione diretta tra ECU in casi rari. I livelli logici sono relativi alla tensione a bordo del veicolo, con valori inferiori al $20\%$ che rappresentano "0" e valori superiori all'$80\%$ che rappresentano "1". La trasmissione di bit segue uno schema compatibile con UART (Universal Asynchronous Receiver Transmitter), comprensivo di un bit di start, otto bit di dati, un bit di stop e un bit di parità opzionale. La velocità di trasmissione dei bit può variare da 1,2 kBit/s a 10,4 kBit/s, ma è determinata dall'ECU, non dal bus. Di conseguenza, il master deve essere in grado di gestire più velocità di bit.
 
-\subsection{Protocollo del Bus K-Line}
+\subsubsection{Protocollo del Bus K-Line}
 
 Il protocollo del Bus K-Line prevede una procedura di stabilimento della connessione che esiste in due varianti: "5 Baud init" e "Fast init". Nella prima variante, il master invia l'indirizzo di destinazione utilizzando una velocità di 5 bit al secondo. L'ECU risponde con il valore 0x55 (01010101), che rappresenta il byte basso della chiave di comunicazione, e il byte alto con la velocità di dati desiderata. Il master deduce la velocità di bit dal modello e invia un bit di "Echo" corrispondente all'alto byte invertito. L'ECU risponde con un altro bit di "Echo" corrispondente all'indirizzo di destinazione invertito.
 
@@ -320,22 +284,25 @@ La seconda variante, "Fast init", ha una procedura più rapida (100 ms) e una ve
 
 La comunicazione sul Bus K-Line è sempre inizializzata dal master, che invia una richiesta a cui l'ECU risponde con una risposta. L'indirizzamento può essere a livello fisico (per identificare specifiche ECU) o a livello funzionale (per identificare classi di ECU come motore, trasmissione, ecc.). La durata di una singola trasmissione a 10,4 kBit/s varia da 250 ms nel miglior caso a 5,5 s nel caso peggiore, il che implica un tasso di dati di livello di applicazione inferiore a 1 KB/s.
 
-\subsection{Intestazione del Protocollo del Bus K-Line}
+\subsubsection{Intestazione del Protocollo del Bus K-Line}
 
 L'intestazione di un messaggio K-Line comprende un "byte di formato" che codifica la presenza e il significato dei byte di indirizzo. Inoltre, la lunghezza del pacchetto può essere codificata nel byte di formato, consentendo di omettere il byte di lunghezza. L'intestazione include l'indirizzo di destinazione, l'indirizzo di origine, la lunghezza del messaggio e il payload, che può contenere fino a 255 byte. Il primo byte del payload rappresenta l'Identificatore del Servizio (SID), seguito da un byte di checksum che è la somma di tutti i byte del messaggio, calcolata in modulo 256.
 
-\subsection{Service Identifiers (SIDs) del Bus K-Line}
+\subsubsection{Service Identifiers (SIDs) del Bus K-Line}
 
 Il Bus K-Line utilizza Service Identifiers (SIDs) per definire il tipo di servizio richiesto o fornito. Tra i SIDs standard troviamo quelli per l'inizializzazione e la terminazione della sessione, come "0x81h Start Communication Service Request" e "0x82h Stop Communication Service Request". Altri SIDs possono essere definiti dai produttori e passati invariati al livello di applicazione. Inoltre, è comune utilizzare due SIDs per ciascun tipo di messaggio: il primo SID rappresenta una risposta positiva, mentre il secondo indica una risposta negativa.
 
-\subsection{Gestione degli Errori del Bus K-Line}
+\subsubsection{Gestione degli Errori del Bus K-Line}
 
 La gestione degli errori sul Bus K-Line prevede che, se arriva un segnale errato, l'ECU ignora il messaggio. Il master, d'altro canto, rileva la mancanza di un'accettazione e ripete il messaggio. Se dati non validi vengono inviati, il livello di applicazione può rispondere con una risposta negativa. In questo modo, sia il master che l'ECU possono reagire in modo appropriato agli errori.
 
-\subsection{Utilizzo nella Diagnostica On Board (OBD)}
+\subsubsection{Utilizzo nella Diagnostica On Board (OBD)}
 
 Il Bus K-Line è comunemente impiegato nella Diagnostica On Board (OBD). Il pin 7 del connettore OBD è dedicato al Bus K-Line. Nella diagnosi OBD, viene utilizzata una variante più rigorosa del protocollo. La velocità di bit è fissa a 10,4 kBit/s e non vi sono modifiche nei tempi. L'intestazione del messaggio non è più variabile e il byte di lunghezza non è mai incluso. L'indirizzo è sempre incluso e la lunghezza massima del messaggio è limitata a 7 byte. Il protocollo OBD deve utilizzare l'indirizzamento logico da parte del tester e l'indirizzamento fisico da parte delle ECU.
 
+
+\subsubsection{Riassunto}
+Principalmente utilizzato per scopi di diagnostica, il Bus K-Line utilizza la segnalazione UART per la trasmissione dei dati. La comunicazione su questo bus segue uno schema di tipo Richiesta-Risposta, in cui un dispositivo invia una richiesta e un altro dispositivo risponde con una risposta corrispondente. Questa modalità di comunicazione è ampiamente utilizzata nell'ambito della diagnostica per interagire con unità di controllo elettroniche (ECU) e ottenere informazioni o effettuare regolazioni.
 
 
 
@@ -574,7 +541,7 @@ Dopo il primo frame il sender aspetta il \textbf{flow control frame}.
 
 \textbf{Flow control-frame}: 3 bytes pci, high nibble è 3 e low nibble specifica lo stato del flusso \textbf{FS}
 \begin{itemize}
-  \item FS 1: cear send
+  \item FS 1: clear to send
   \item FS 2: wait
 \end{itemize}
 
@@ -615,5 +582,31 @@ Protocollo simile a TCP:
   \item Byte 6: application type
 \end{itemize}
 
-%  TODO: arrivato a pagina 82
-% TODO: prof arrivato almeno a pagina 85
+
+
+
+
+\textbf{Impostazione dei parametri del canale}
+Nel contesto del protocollo TP 2.0 del Bus CAN, sono previste operazioni di impostazione dei parametri del canale. Il Byte 0 indica l'opcode, che può essere 0xA0 per la "Richiesta di configurazione del canale" (parametri per il canale verso l'iniziatore) o 0xA1 per la "Risposta di configurazione del canale" (parametri per il canale inverso). Il Byte 1 specifica la dimensione del blocco, ovvero il numero di messaggi CAN che il mittente deve attendere prima di ricevere un ACK. I Byte 2, 3, 4 e 5 definiscono i parametri di temporizzazione, ad esempio il tempo minimo tra due messaggi CAN.
+
+\textbf{Gestione generale e chiusura del canale}
+Nel contesto del protocollo TP 2.0 del Bus CAN, sono previste operazioni di gestione generale e chiusura del canale. Il Byte 0 specifica l'opcode, che può essere 0xA3 per il "Test" (che riceverà una risposta con la "Risposta di configurazione della connessione"), 0xA4 per il "Break" (in cui il ricevitore scarta i dati dall'ultimo ACK in poi) o 0xA5 per la "Disconnessione" (in cui il ricevitore risponde con una disconnessione).
+
+\textbf{Trasmissione di dati tramite canali}
+Nel protocollo TP 2.0 del Bus CAN, la trasmissione di dati avviene tramite canali. Il Byte 0, con il nibble alto, specifica l'opcode. Quando il bit più significativo (MSB) è 0, indica un payload. Quando /AR è 0, indica che il mittente sta ora aspettando un ACK. Quando EOM è 1, indica che si tratta dell'ultimo messaggio di un blocco. Quando il MSB è 1, il messaggio è solo un ACK, senza payload. Quando RS è 1, il canale è pronto per il prossimo messaggio, è un meccanismo di controllo del flusso. Il nibble basso del Byte 0 rappresenta il numero di sequenza. I Byte da 1 a 7 contengono il payload.
+
+
+
+
+
+\subsubsection{CAN - main takeaways}
+
+\begin{itemize}
+  \item BUS standard nei veicoli
+  \item message oriented
+  \item CSMA con bitwise arbitration
+  \item error detection
+  \item Transport layer: ISO-TP VS TP 2.0
+\end{itemize}
+
+
