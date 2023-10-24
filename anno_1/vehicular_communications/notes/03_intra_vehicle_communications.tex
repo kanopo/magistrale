@@ -609,4 +609,136 @@ Nel protocollo TP 2.0 del Bus CAN, la trasmissione di dati avviene tramite canal
   \item Transport layer: ISO-TP VS TP 2.0
 \end{itemize}
 
+\subsection{LIN: Local Interconnect Network} % (fold)
+\label{sub:LIN: Local Interconnect Network}
+
+Il goal principale del LIN bus è quello di essere poco costoso di low speed can, la specfica riguarda
+lo strato fisoc e data link layer.
+
+LIN è simile a K-Line e sfrutta il concetto di master-slave, il nodo master solitamente
+fa parte di un bus CAN, infatti il lin bus prende il nome di sub bus solitamente.
+
+Il LIN bus è formato di un solo filo e offre una comunicazione bidirezionale fino a velocità
+di $20kBit/s$.
+
+La trasmissione dei bit è compatibile con UART(1 start bit basso, 8 data bit e 1 stop bit alto) e la comunicazione è del tipo message oriented, quindi non ci sono indirizzi.
+
+
+L'errore è percepito mediante l'ascolto dell'energia del canale di comunicazione, non è presente una metodo di correzione dell'errore.
+
+I messaggi sono scanditi da cicli temporali definiti dal master.
+
+I segnali inviati dal master sono:
+\begin{enumerate}
+  \item sync break: 13 bit bassi e 1 bit alto
+  \item sync byte: 0x55(01010101)
+  \item LIN Identifier: 6 bit(I0 fino a I5) + 2 bit di parity
+    \begin{itemize}
+      \item 0x00 fino a 0x3b sono tipi di dati definit dall'applicazione
+      \item 0x3c fino a 0x3d sono messaggi per la diagnosi
+      \item 0x3e è un messaggio definito dall'applciazione
+      \item 0x3f è un messaggio riservato
+      \item i bit di parity sono codficati come % TODO: finire di scrivere la parity a pagina 90 
+    \end{itemize}
+\end{enumerate}
+
+
+
+I segnali inviati dallo slave sono risposte con 8 byte di dati, con codifica LSB first(Least Significant Bit) prende anche il nome di \textbf{Little Endian}.
+
+La lunghezza è identificata dal'identificatore LIN.
+
+I frame di dati finiscono con il checksum che è costruito come somma di tutti i bytes e dei loro riporti.
+
+
+\subsubsection{Types of requests} % (fold)
+\label{sec:Types of requests}
+
+Gli \textbf{unconditionl frame} sono i frame più semplici, progettati per \textit{pooling periodico} e sono uno slave risponde.
+Un esempio è: "la porta davanti a destra ha cambiato stato?".
+
+
+Gli \textbf{event triggered frame} viene effettuato il \textbf{pooling} da tanti slaves, spesso questa richiesta viene avviata dal can.
+Può portare a collissione che il master riconosce dai dati corrotti e richiede dati individualemnte agli slaves.
+
+Gli \textbf{sporadic frame} inviato dal master solo quando necessario
+
+
+Un esempio di schedule table è:
+\begin{table}[!ht]
+  \caption{Schedule table}\label{tab:schedule table}
+  \begin{center}
+    \begin{tabular}[c]{c c c}
+      \hline
+      1 & unconditionl & ac \\
+      2 & unconditionl & rain sensor \\
+      3 & unconditionl & tire pressure \\
+      4 & event triggered & door status \\
+      5 & sporaic & temperature \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+
+
+
+
+% subsubsection Types of requests (end)
+
+Per fare la diagnosi esterna e interrogare il bus lin si procede in due modi:
+\begin{itemize}
+  \item si interroga il master collegato al can protocol che risponde impersonando i vari nodi della sua sotto rete
+  \item si interroga direttamente il nodo lin e quindi il master deve fare tunnellign dei dati(schefezza ma più sofisticato)
+\end{itemize}
+
+\subsubsection{Main takeaways} % (fold)
+\label{sec:Main takeaways}
+% TODO: aggiungee da pagina 97 e 98
+
+% subsubsection Main takeaways (end)
+
+
+% subsection LIN: Local Interconnect Network (end)
+
+
+\subsection{FlexRay} % (fold)
+\label{sub:FlexRay}
+
+Le motivazioni per lo sviluppo di flexray sono:
+\begin{itemize}
+  \item tutto fatto by wire (X-By-Wire)
+  \item can bus non ha ridondanza ed è facile che fallisca
+  \item can bus è lento
+  \item can bus non è deterministico
+\end{itemize}
+
+Le soluzioni principali sono state introdotte da OEM(Original Equipment Manufacturer) e le proposte sono state TTCAN, TTP/TTA ecc.
+
+Alla fine BMW, VW, Bosch e altri hanno fatto un consorzio e realizzato un nuovo bus chiamato felxray.
+
+La topologia di rete è:
+
+\begin{figure}[!ht]
+  \begin{adjustbox}{width=0.5\columnwidth, center}
+    \includegraphics{images/flexray.png}
+  \end{adjustbox}
+  \caption{FlexRay network}
+  \label{fig:flexray_network}
+\end{figure}
+
+si usano solitamente due canali per comunicare cosi da avere due comunicazioni parallere la $10 MBit/s$ che si sommano e danno $20 MBit/s$.
+
+
+La trasmissione necessita di sincronizzazione tra sender e receiver.
+
+Non viene utilizzato il bit stuffing per mantenere la lunghezza dei dati deterministica.
+
+
+% TODO: stoppato a pagina 102
+% TODO: ripreso a pagina 141
+
+
+
+% subsection FlexRay (end)
 
