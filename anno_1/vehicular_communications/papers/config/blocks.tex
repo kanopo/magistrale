@@ -1,0 +1,50 @@
+\definecolor{blockTitleFG}{RGB}{4,6,76}
+\definecolor{blockTitleBG}{RGB}{252,187,6}
+\definecolor{blockBodyFG}{RGB}{0,0,0}
+\definecolor{blockBodyBG}{RGB}{255,255,200}
+
+\newenvironment<>{craneblock}[1]{%
+	\setbeamercolor{block title}{fg=blockTitleFG, bg=blockTitleBG}%
+	\setbeamercolor{block body}{fg=blockBodyFG,bg=blockBodyBG}%
+	\begin{block}#2{#1}}{\end{block}}
+
+\newenvironment<>{postitblock}[1]{%
+	\setbeamercolor{block title}{fg=blockTitleFG, bg=yellow!80!black}%
+	\setbeamercolor{block body}{fg=blockBodyFG, bg=yellow!90!white}%
+	\begin{block}#2{#1}}{\end{block}}
+
+
+\newenvironment<>{whiteblock}[1]{%
+	\setbeamercolor{block title}{fg=blockTitleFG, bg=white}%
+	\setbeamercolor{block body}{fg=blockBodyFG,bg=white}%
+	\begin{block}#2{#1}}{\end{block}}
+
+\newenvironment<>{redblock}[1]{%
+	\setbeamercolor{block title}{fg=blockTitleFG, bg=white}%
+	\setbeamercolor{block body}{fg=white,bg=red!75!black}%
+	\begin{block}#2{#1}}{\end{block}}
+
+\newenvironment<>{blueblock}[1]{%
+	\setbeamercolor{block title}{fg=blockTitleFG, bg=white}%
+	\setbeamercolor{block body}{fg=white,bg=blue!75!white}%
+	\begin{block}#2{#1}}{\end{block}}
+
+\newenvironment<>{whiteTblock}[1]{%
+	\begin{tcolorbox}[colback=white,colframe=blockTitleFG,{title=#1}]
+		{#2}}
+	{\end{tcolorbox}}
+
+\newenvironment<>{redTblock}[1]{%
+	\begin{tcolorbox}[colback=white,colframe=red!75!black,{title=#1}]
+		{#2}}
+	{\end{tcolorbox}}
+
+\newenvironment<>{greenTblock}[1]{%
+	\begin{tcolorbox}[colback=white,colframe=green!50!black,{title=#1}]
+		{#2}}
+	{\end{tcolorbox}}
+
+\newenvironment<>{craneTblock}[1]{%
+	\begin{tcolorbox}[colback=white,colframe=gialloparma,{title=#1}]
+		{#2}}
+	{\end{tcolorbox}}
