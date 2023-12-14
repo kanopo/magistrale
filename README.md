@@ -35,3 +35,19 @@
 - PATH AND TRAJECTORY PLANNING*
 - AUTONOMOUS DRIVING & ADAS TECHNOLOGIES*
 - VISUAL PERCEPTION FOR SELF-DRIVING CARS**
+
+
+
+## unipr
+### Primo semestre
+English for engineering and architecture - 1 semestre (3) SESSIONE INVERNALE
+Ricerca operativa - 1 semestre (9) SESSIONE INVERNALE
+Sistemi informativi - 1 semestre (9)
+Sistemi multi variabili - 1 semestre (6) SESSIONE INVERNALE
+Vehicular communications - 1 semestre (6) SEGUITA
+
+### Secondo semestre
+Sistemi operativi in tempo reale - 2 semestre (9)
+High performance computing - 2 semestre (6)
+Intelligenza artificiale - 2 semestre (6)
+Paradigmi e linguaggi per l'analisi dei dati - 2 semestre (6)

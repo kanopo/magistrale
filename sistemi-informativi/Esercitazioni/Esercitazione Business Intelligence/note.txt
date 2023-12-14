@@ -1,0 +1,4 @@
+Errata corrige
+
+v. 1.2: corretta la relazione tra TIMEINFO (dimensione) e TRANSACT (misura):
+	è TRANSACT.TRAN_DATE che deve riferirsi a TIMEINFO.SALEDATE, non il contrario.
