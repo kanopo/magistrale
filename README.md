@@ -14,10 +14,11 @@
 
 
 - [ ] INSEGNAMENTI DI CURRICULUM 12
-  - [x] VEHICULAR COMMUNICATIONS* [url](https://elly2023.dia.unipr.it/course/view.php?id=582)
-  - [ ] INTERNET OF THINGS*
+  - [ ] PARADIGMI E LINGUAGGI PER L’ANALISI DEI DATI (I ANNO) [url](https://elly2023.dia.unipr.it/course/view.php?id=839)
+  - [ ] HIGH PERFORMANCE COMPUTING* (I ANNO) [url](https://elly2023.dia.unipr.it/course/view.php?id=838)
 
-- INSEGNAMENTO A SCELTA 6
+- [x] INSEGNAMENTO A SCELTA 6
+  - [x] VEHICULAR COMMUNICATIONS* [url](https://elly2023.dia.unipr.it/course/view.php?id=582)
 
 
 ## CURRICULUM “INTELLIGENZA ARTIFICIALE”
