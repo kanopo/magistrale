@@ -3,17 +3,20 @@
 
 ## Primo Anno
 ### Primo semestre
-- RICERCA OPERATIVA 9 [url](https://elly2023.dia.unipr.it/course/view.php?id=827)
-- SISTEMI INFORMATIVI 9 [url](https://elly2023.dia.unipr.it/course/view.php?id=830)
-- SISTEMI MULTIVARIABILI 6 [url](https://elly2023.dia.unipr.it/course/view.php?id=831)
-- ENGLISH FOR ENGINEERING AND ARCHITECTURE 3 [url](https://elly2023.dia.unipr.it/course/view.php?id=972)
+- [ ] RICERCA OPERATIVA 9 [url](https://elly2023.dia.unipr.it/course/view.php?id=827)
+- [ ] SISTEMI INFORMATIVI 9 [url](https://elly2023.dia.unipr.it/course/view.php?id=830)
+- [ ] SISTEMI MULTIVARIABILI 6 [url](https://elly2023.dia.unipr.it/course/view.php?id=831)
+- [x] ENGLISH FOR ENGINEERING AND ARCHITECTURE 3 [url](https://elly2023.dia.unipr.it/course/view.php?id=972)
 
 ### Secondo semestre
-- SISTEMI OPERATIVI IN TEMPO REALE 9 [url](https://elly2023.dia.unipr.it/course/view.php?id=832)
-- INTELLIGENZA ARTIFICIALE 6 [url](https://elly2023.dia.unipr.it/course/view.php?id=822)
+- [ ] SISTEMI OPERATIVI IN TEMPO REALE 9 [url](https://elly2023.dia.unipr.it/course/view.php?id=832)
+- [ ] INTELLIGENZA ARTIFICIALE 6 [url](https://elly2023.dia.unipr.it/course/view.php?id=822)
 
 
-- INSEGNAMENTI DI CURRICULUM 12
+- [ ] INSEGNAMENTI DI CURRICULUM 12
+  - [x] VEHICULAR COMMUNICATIONS* [url](https://elly2023.dia.unipr.it/course/view.php?id=582)
+  - [ ] INTERNET OF THINGS*
+
 - INSEGNAMENTO A SCELTA 6
 
 
@@ -47,7 +50,7 @@ Sistemi multi variabili - 1 semestre (6) SESSIONE INVERNALE
 Vehicular communications - 1 semestre (6) SEGUITA
 
 ### Secondo semestre
-Sistemi operativi in tempo reale - 2 semestre (9)
+Sistemi operativi in tempo reale - 2 semestre (9) SEGUITA
 High performance computing - 2 semestre (6)
 Intelligenza artificiale - 2 semestre (6)
 Paradigmi e linguaggi per l'analisi dei dati - 2 semestre (6)
