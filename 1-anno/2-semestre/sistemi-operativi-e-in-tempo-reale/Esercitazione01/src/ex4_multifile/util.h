@@ -1,3 +1,5 @@
+#ifndef UTIL_H
+#define UTIL_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -23,3 +25,5 @@ long computeElapsedTime(struct timeval start, struct timeval end)
 {
   return ((end.tv_sec * 1000000 + end.tv_usec) - (start.tv_sec * 1000000 + start.tv_usec))/1000.0;
 }
+
+#endif // UTIL_H

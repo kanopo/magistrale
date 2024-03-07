@@ -1,3 +1,5 @@
+#ifndef FAST_TRIGO_H
+#define FAST_TRIGO_H
 /**
  * University of Parma - Sistemi Operativi.
  * Author: Dario Lodi Rizzini
@@ -48,3 +50,4 @@ double fastSin(double x);
  */
 double fastAtan(double x);
 
+#endif // FAST_TRIGO_H

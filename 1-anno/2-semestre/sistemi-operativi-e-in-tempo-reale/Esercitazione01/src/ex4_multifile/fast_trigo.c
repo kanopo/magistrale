@@ -31,3 +31,9 @@ double fastAtan(double x) {
   return x * (ATAN_A1 + x2 * (ATAN_A3 + ATAN_A7 * x4) + x4 * (ATAN_A5 + ATAN_A9 * x4));
 }
 
+
+int main(int argc, char *argv[])
+{
+
+    return EXIT_SUCCESS;
+}

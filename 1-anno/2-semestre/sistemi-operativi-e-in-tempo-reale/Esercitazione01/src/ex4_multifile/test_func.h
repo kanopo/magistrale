@@ -1,3 +1,5 @@
+#ifndef TEST_FUNC_H
+#define TEST_FUNC_H
 /**
  * University of Parma - Sistemi Operativi.
  * Author: Dario Lodi Rizzini
@@ -62,3 +64,4 @@ double updateErr(double errPrev, double val1, double val2, enum NormType ntype) 
   }
   return errCurr; 
 }
+#endif // TEST_FUNC_H
