@@ -1,0 +1,6 @@
+gcc -Wall -c sensore.c
+gcc -Wall -c list.c
+gcc -Wall -c util.c
+gcc -Wall -o sensore sensore.o list.o util.o
+gcc -Wall -c hub_campo.c
+gcc -Wall -o hub_campo hub_campo.o list.o util.o
